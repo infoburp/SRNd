@@ -1,0 +1,40 @@
+Overchan allows to create an (usually) decentralized imageboard based on NNTP articles.
+
+This plugin parses NNTP articles and creates static HTML documents.
+Which NNTP articles are parsed depends on the hook configuration in data/config/hooks/plugins/overchan, usually all articles belonging to any group in the namespace overchan.* (see hooks.txt for details).
+
+Overchan decodes base64 encoded attachments of type image/*, creates thumbnails and stores everything in a specific directory (usually data/plugins/overchan/out/) which can then be served by a webserver like nginx.
+New posts from the webfrontend itself are usually proxied to postman which creates a new NNTP article (see plugin_postman.txt for details).
+These new articles are then sent to other NNTP servers using outfeed hooks (see hook_outfeed.txt for details).
+
+For this to work it requires a webserver which can be configured to proxy some requests (/incoming usually) to another server (which in this case is the postman plugin).
+A simple nginx site configuration:
+
+server {
+  listen 1.2.3.4:80;
+  server_name overchan.somestrangename.ano;
+  root $path_to_srnd/data/plugins/overchan/out/;
+
+  client_max_body_size 5M;
+
+  location /incoming {
+    # proxy new messages to postman
+    proxy_pass http://127.0.0.1:53751;
+  }
+  location ~* ^.+\.html$ {
+    # force clients to always request the latest version
+    try_files  $uri =404;
+    expires     1s;
+  }
+  location = / {
+    # redirect / to random-1.html
+    try_files /random-1.html =404;
+    expires     1s;
+  }
+  location / {
+    # allow clients to cache everything not .html
+    try_files  $uri =404;
+    expires    max;
+  }
+}
+

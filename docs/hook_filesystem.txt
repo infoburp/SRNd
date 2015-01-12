@@ -1,0 +1,13 @@
+Filesystem hooks will create a symlink in $SRNd_data_root/hooks/$hookname/ for every new article matching the hook rules (see hooks.txt).
+
+The name of a hook file will be the name of the directory which will hold symlinks poiting to articles.
+SRNd will create the hook directory in $SRNd_data_root/hooks/$hookname.
+
+External applications may use filesystem hooks to get informed about new articles they "subscribed" to (based on the rules of their hook).
+There can be different files in $SRNd_data_root/config/hooks/filesystem/, each representing a single filesystem hook.
+
+Usually external applications will
+  1) have their own hook
+  2) use the filesystem notify API of their operating system (or need to poll) to get changes of the hook directory
+  3) progress articles which will be symlinked automatically by SRNd
+  4) delete the symlink, this should obviously not affect the article itself

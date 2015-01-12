@@ -1,0 +1,39 @@
+Plugin hooks will load a plugin and notify this plugin about every new article matching the hook rules (see hooks.txt).
+
+The name of a hook file will be the name of the plugin SRNd tries to load at startup.
+
+Plugin hooks are different from filesystem or outfeed hooks as they define an additional parameter called #start_param.
+All lines starting with #start_parm have to be in the format #start_param key=value.
+These lines are parsed by SRNd and put into a dictionary which is then passed as argument to the plugin constructor.
+
+Any SRNd plugin needs to be:
+  1) written in python
+  2) located in $SRNd_data_root/plugins/$pluginname/$pluginname.py
+  2) import external libraries in it's constructor
+  3) have a class called main(threading.Thread) with:
+     - __init__(self, thread_name, args)
+     - def run(self)
+     - def add_article(self, message_id)
+     - def shutdown(self)
+
+The constructor is called before chrooting and setuid/setgid, its the only way to import necessary dependencies (and their dependencies) which the plugin might need to work.
+
+A definition of its required methods:
+  __init__(self, thread_name, args)
+    1) call threading.Thread.__init__(self)
+    2) import everything necessary for the plugin to work
+    3) parse the args dictionary and set internal variables appropiatly
+    4) create a class internal queue
+
+  add_article(self, message_id)
+    1) add message_id to queue
+
+  run(self):
+    1) create eventually missing directories and files
+    2) set class internal variable running = True
+    3) loop until running = False
+    4) inside the loop get a new item from the queue like item = self.queue.get(block=True, timeout=1)
+    5) progress that entry with parsing the article from articles/$message_id
+
+  shutdown(self)
+    1) set running = False

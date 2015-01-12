@@ -1,0 +1,4 @@
+Outfeed hooks will connect to a remote NNTP server and send every new article matching the hook rules (see hooks.txt), either via TAKETHIS, IHAVE or POST (in that order).
+
+The name of a hook file define IP and port of the remote NNTP server and thus have to be in format $IP:$port (123.123.123.123:119).
+Currently only domains or IPv4 addresses are supported.

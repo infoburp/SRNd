@@ -1,0 +1,31 @@
+Paste allows to create an (usually) decentralized pastebin based on NNTP articles.
+
+This plugin parses NNTP articles and creates static HTML documents.
+Which NNTP articles are parsed depends on the hook configuration in data/config/hooks/plugins/paste, usually all articles belonging to the group ano.paste (see hooks.txt for details).
+
+Paste tries to recognize if the article contains some programming language which it then tries to syntax highlight using the pygments library.
+It then creates two files for each article:
+  1) a static HTML document created by pygments
+  2) a raw .txt file
+Both files are saved in a specific directory (usually data/plugins/paste/out/) which can then be served by a webserver like nginx.
+
+New pastes from the webfrontend itself are usually proxied to postman which creates a new NNTP article (see plugin_postman.txt for details).
+These new articles are then sent to other NNTP servers using outfeed hooks (see hook_outfeed.txt for details).
+
+For this to work it requires a webserver which can be configured to proxy some requests (/incoming usually) to another server (which in this case is the postman plugin).
+A simple nginx site configuration:
+
+server {
+  listen 1.2.3.4:80;
+  server_name paste.somestrangename.ano;
+  root $path_to_srnd/data/plugins/paste/out/;
+
+  client_max_body_size 1M;
+  location /incoming {
+    proxy_pass http://127.0.0.1:53751;
+  }
+  location / {
+    try_files  $uri /index.html;
+    expires    1s;
+  }
+}

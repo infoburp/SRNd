@@ -1,0 +1,18 @@
+# see docs/hooks.txt for a detailed description about the hook configuration syntax.
+
+# if SRNd is configured to chroot into its data directory (which is the default and recommend) you can only use paths inside the data directory.
+# basically you have three options:
+# a) let your webserver access $SRNd_data_directory/plugins/paste/out (recommend), or - if your webserver chroots itself for example -
+# b) create a (hard) link in $SRNd_data_directory/plugins/paste/out pointing to a directory which is readable by your webserver and
+#    writeable by the user SRNd runs with (usually "news")
+# c) link $SRNd_data_directory/plugins/paste/out to a remote server, via sshfs or nfs for example
+
+# this plugin requires the pygments module for python
+# FIXME: move this warning to paste.py and check for import error
+
+#start_param template_directory=plugins/paste/templates
+#start_param output_directory=plugins/paste/out
+#start_param database_directory=plugins/paste
+#start_param debug=2
+
+ano.paste

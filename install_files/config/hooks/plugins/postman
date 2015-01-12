@@ -1,0 +1,9 @@
+# see docs/hooks.txt for a detailed description about the hook configuration syntax.
+
+#start_param bind_ip=127.0.0.1
+#start_param bind_port=53751
+#start_param bind_use_ipv6=False
+#start_param template_directory=plugins/postman/templates
+#start_param frontend_directory=plugins/postman/frontends
+#start_param debug=2
+#start_param reject_debug=True

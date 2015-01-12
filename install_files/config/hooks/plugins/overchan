@@ -1,0 +1,18 @@
+# see docs/hooks.txt for a detailed description about the hook configuration syntax.
+
+# if SRNd is configured to chroot into its data directory (which is the default and recommend) you can only use paths inside the data directory.
+# basically you have three options:
+# a) let your webserver access $SRNd_data_directory/plugins/overchan/out (recommend), or - if your webserver chroots itself for example -
+# b) create a (hard) link in $SRNd_data_directory/plugins/overchan/out pointing to a directory which is readable by your webserver and
+#    writeable by the user SRNd runs with (usually "news")
+# c) link $SRNd_data_directory/plugins/overchan/out to a remote server, via sshfs or nfs for example
+
+#start_param template_directory=plugins/overchan/templates
+#start_param output_directory=plugins/overchan/out
+#start_param database_directory=plugins/overchan
+#start_param temp_directory=plugins/overchan/tmp
+#start_param invalid_file=invalid.png
+#start_param no_file=nope.png
+#start_param debug=2
+
+overchan.*

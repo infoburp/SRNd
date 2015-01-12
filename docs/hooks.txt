@@ -1,0 +1,62 @@
+Hooks are a way to get events from SRNd once a message for a specific group has been received.
+
+SRNd currently supports 3 different kinds of hooks:
+  1) filesystem hooks which create a new symlink in a specific directory for every new message matching the hook
+  2) plugin hooks which load a plugin and then inform this plugin for every new message matching the hook
+  3) outfeed hooks which connect to a remote NNTP server and send every new message matching the hook
+
+Hooks are configured with placing a file called $hookname in $SRNd_data_root/config/hooks/$hooktype/.
+The name of file defines
+  - for filesystem hooks: the name of the directory SRNd will save symlinks to
+  - for plugin hooks: the name of the plugin to be loaded
+  - for outfeed hooks: the IP and port SRNd tries to connect to
+
+New filesystem and outfeed hooks can be added with sending a SIGHUB signal to SRNd (kill -1 $pidofSRNd).
+This will also reload all hook rules for all currently running hooks (including plugin hooks).
+For adding new plugin hooks SRNd needs to be restarted.
+
+For more information about the specific hook types read
+  - hooks_filesystem.txt
+  - hooks_outfeed.txt
+  - hooks_plugin.txt
+
+Depending on the goal of the hook the user can
+  1) allow everything (*) and may additionally reject specific groups or namespaces (!do.not.want.this.namespace.*)
+  2) only allow specific groups or namespaces (want.this.group.only)
+
+Rules have the following syntax and behaviour
+  1) each line contains a single rule
+  2) empty lines or lines starting with # are ignored
+  3) allowed: absolute names like namespace.group.name
+  4) allowed: wildcards like namespace.group.* or namesp*
+  5) rules can be prepended by ! to reject matching groups like !namespace.group.name or !namesp*
+  6) a single * is valid and will match everything
+  7) !* is not a valid rule, !some.thing.* is
+  8) a hook without any rule will match nothing
+  9) whitespaces before or after a rule are not allowed
+ 10) * is only allowed as last character of a rule
+ 11) blacklist (!rule) always wins
+
+
+Some examples:
+1) only matches ano.overchan.test but nothing else:
+---
+ano.overchan.test
+
+2) matches everything in ano.overchan but ano.overchan.test:
+---
+ano.overchan.*
+!ano.overchan.test
+
+3) matches everything:
+---
+*
+
+4) matches nothing (this is basically only useful for plugins which itself never read messages from SRNd but instead post messages, plugin postman does this for example):
+---
+
+5) matches everything but ano.overchan.* and ano.paste:
+---
+*
+!ano.overchan.*
+!ano.paste

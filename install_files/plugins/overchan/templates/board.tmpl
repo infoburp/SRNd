@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>overchan.sfor.ano</title>
+    <style type="text/css">
+      body {
+        margin: 0px;
+        background: #444444;
+        font-family: arial,helvetica,sans-serif;
+        font-size: 10pt;
+      }
+      table {
+        font-size: 10pt;
+      }
+      a {
+        color: #898989;
+      }
+      hr {
+        color: #121212;
+      }
+      .filedescription {
+        padding-left: 3px;
+      }
+      .messageroot {
+        margin-bottom: 1px;
+        border: 2px solid #3a3a3a;
+        background: #555555;
+        border-radius: 7px;
+        padding: 5px;
+      }
+      .message {
+        margin-left: 25px;
+        margin-bottom: 1px;
+        border: 2px solid #3a3a3a;
+        background: #555555;
+        border-radius: 7px;
+        padding: 5px;
+      }
+      .image_link {
+        float: left;
+        padding-right: 5px;
+      }
+      .image_root {
+        border-radius: 7px;
+        border: 1px solid #333333;
+        width: 180px;
+      }
+      .image {
+        border-radius: 7px;
+        border: 1px solid #333333;
+        width: 150px;
+      }
+      .thread {
+        padding-top: 5px;
+        padding-left: 10px;
+        padding-right: 20px;
+      }
+      .message_span {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      .postform th {
+        background: #666666;
+        border: 1px solid #333333;
+        text-align: left;
+        padding-left: 4px;
+        padding-right: 5px;
+      }
+      .posttext {
+        width: 400px;
+        height: 20px;
+        border: 1px solid #333333;
+        background: #dedede;
+      }
+      .postbutton {
+        width: 100px;
+        border: 1px solid #aaaaaa;
+        background: #dedede;
+      }
+      .postarea {
+        width: 400px;
+        height: 48px;
+        border: 1px solid #333333;
+        background: #dedede;
+        padding: 0px;
+        margin: 0px;
+      }
+      .postfile {
+        //border: 1px solid #aaaaaa;
+        //background: #dedede;
+      }
+    </style>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  </head>
+  <body>
+    <div class="boards">[%%boardlist%%]</div>
+    <hr />
+    <center><div class="pagelist">Pages: %%pagelist%%</div></center>
+    <div class="postform" align="center">
+      <form method="POST" action="/incoming" enctype="multipart/form-data">
+        <input type="hidden" name="frontend" value="overchan" />
+        <input type="hidden" name="board" value="%%board%%" />
+        <input type="hidden" name="reply" value="" />
+        <input type="hidden" name="target" value="%%target%%" />
+        <table cellspacing="1" cellpadding="0">
+          <tr>
+            <th>Name</th>
+            <td><input type="text" name="name" class="posttext" /></td>
+          </tr>
+          <tr>
+            <th>Subject</th>
+            <td><input type="text" name="subject" class="posttext" /></td>
+          </tr>
+          <tr>
+            <th>Comment</th>
+            <td><textarea name="comment" class="postarea"></textarea></td>
+          </tr>
+          <tr>
+            <th>File</th>
+            <td>
+              <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                  <td><input type="file" name="file" class="postfile" /></td>
+                  <td align="right"><input type="submit" value="new thread" class="postbutton" /></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <hr />
+%%threads%%
+    <div class="pagelist">Pages: %%pagelist%%</div>
+    <hr />
+  </body>
+</html>

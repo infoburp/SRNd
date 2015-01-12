@@ -1,0 +1,45 @@
+Postman listens on a configured port for POST requests to add new articles to NNTP, based on configured frontends.
+
+Each frontend may be configured to require or overwrite various fields it receives via POST request. Frontends can be configured in data/plugins/postman/frontends.
+
+There are three different kinds of variables:
+  - static ones (key=value) which are used directly by postman and have to be set before any of the following
+  - lists which are marked by a header enclosed in ()
+  - dictionaries (key-value pairs) which are marked by a header enclosed in []
+
+Static variables currently supported:
+  - uid_host          will be used as sender part of a new NNTP article (required field in frontend configuration)
+  - enforce_target    will overwrite the redirection target postman usually receives via POST request (optional)
+  - enforce_board     will overwrite the group postman writes the NNTP article to (optional)
+
+List variables currently supported:
+  - (required_fields) will reject the POST if any of the following fields are missing
+  - (allowed_files)   will reject the POST if it contains a binary attachment whose content type is not one of the following, wildcards like image/* are supported
+  - (allowed_boards)  will reject the POST if its desired board/group field is not in this list
+
+Dictionary variables currently supported:
+  - [defaults]        will be used as default for listed variables if the POST request does not contain those or they are empty
+
+
+This is the current frontend configuration file for overchan for example:
+
+uid_host=web.overchan.i.did.not.read.the.config
+
+(required_fields)
+name
+subject
+board
+reply
+comment
+target
+
+[defaults]
+subject=None
+name=Anonymous
+email=nobody@no.where
+
+(allowed_files)
+image/*
+
+(allowed_boards)
+overchan.*

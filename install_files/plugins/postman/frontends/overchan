@@ -1,0 +1,26 @@
+# empty lines or lines starting with # are ignored
+# () == list
+# [] == dict
+
+uid_host=web.overchan.i.did.not.read.the.config
+#enforce_target=%%sha1_message_uid_10%%.html
+#enforce_board=some.board.name
+
+(required_fields)
+name
+subject
+board
+reply
+comment
+target
+
+[defaults]
+subject=None
+name=Anonymous
+email=nobody@no.where
+
+(allowed_files)
+image/*
+
+(allowed_boards)
+overchan.*

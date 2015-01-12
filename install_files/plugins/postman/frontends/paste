@@ -1,0 +1,21 @@
+# empty lines or lines starting with # are ignored
+# () == list
+# [] == dict
+
+uid_host=web.paste.i.did.not.read.the.config
+enforce_target=%%sha1_message_uid_10%%.html
+enforce_board=ano.paste
+
+(required_fields)
+name
+email
+subject
+board
+reply
+comment
+target
+
+[defaults]
+subject=no title
+name=Anonymous Coward
+email=nobody@no.where
