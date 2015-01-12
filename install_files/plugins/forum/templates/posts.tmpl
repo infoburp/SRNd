@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+   
+<html>
+  <head>
+    <title>${title} :: ${current_board_name} :: ${current_thread_subject}</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="styles.css" type="text/css">
+    <link rel="stylesheet" href="user.css" type="text/css">
+  </head>
+  <body>
+    <div class="sitetitle">
+      <h2><a href="boards.html">${title}</a></h2>
+      <b>decentralized and distributed</b>
+    </div>
+    <br />
+    <div style="width: 100%; font-weight: bold;">
+      <a href="boards.html">${title}</a> » <a href="${current_board_link}">${current_board_name}</a> » <a href="${current_thread_link}">${current_thread_subject}</a>
+      <br /><div style="float: right"><a href="#reply" style="text-decoration: none;">reply</a></div>
+      <br /><br />
+    </div>
+    <table id="posts" class="datatable" style="width: 100%;">
+${posts_list}
+    </table>
+    <br />
+    <div class="postform" align="center" id="reply">
+      <form method="POST" action="/incoming" enctype="multipart/form-data">
+        <input type="hidden" name="frontend" value="forum" />
+        <input type="hidden" name="board" value="${current_board_name}" />
+        <input type="hidden" name="reply" value="${current_thread}" />
+        <input type="hidden" name="target" value="${current_thread_link}#%%sha1_message_uid_10%%" />
+        <table cellspacing="1" cellpadding="0">
+          <tr>
+            <th>Name</th>
+            <td><input type="text" name="name" class="posttext" /></td>
+          </tr>
+          <tr>
+            <th>Subject</th>
+            <td><input type="text" name="subject" class="posttext" /></td>
+          </tr>
+          <tr>
+            <th>Comment</th>
+            <td><textarea name="comment" class="postarea"></textarea></td>
+          </tr>
+          <tr>
+            <th>File</th>
+            <td>
+              <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                  <td><input type="file" name="file" class="postfile" /></td>
+                  <td align="right"><input type="submit" value="reply" class="postbutton" /></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </body>
+</html>

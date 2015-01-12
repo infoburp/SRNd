@@ -1,0 +1,232 @@
+      body {
+        margin: 0px;
+        background: #101010;
+        font-family: arial,helvetica,sans-serif;
+        color:#ffffff;
+        font-size: 10pt;
+      }
+      //table {
+      //  font-size: 10pt;
+      //}
+      a {
+        color: #f7acb1;
+      }
+      hr {
+        color: #363636;
+        width: 98%;
+        height: 0px;
+        border-top: 1px solid;
+        border-bottom: none;
+      }
+      .sitetitle {
+        text-align: center;
+        color: #ABABAB;
+        margin: 10px 20px 20px 20px;
+      }
+      .sitetitle h2 {
+        margin: 0px;
+      }
+      .sitetitle h2 a {
+        color: #ABABAB;
+        text-decoration: none;
+      }
+      .filedescription {
+        font-style: italic;
+      }
+      .messageroot {
+        margin-bottom: 1px;
+        border: none;
+        background:  #101010;
+        padding: 5px;
+      }
+      .message {
+        margin-left: 25px;
+        margin-bottom: 1px;
+        border: 1px solid #363636;
+        background: #1c1c1c;
+        border-radius: 0px;
+        padding: 5px;
+      }
+      .image_link {
+        float: left;
+        padding-right: 5px;
+      }
+      .image_root {
+        border-radius: 0px;
+        border: 1px solid #363636;
+        width: 180px;
+      }
+      .image {
+        border-radius: 0px; 
+        border: 1px solid #363636;
+        width: 150px;
+      }
+      .thread {
+        padding-top: 5px;
+        padding-left: 10px;
+        padding-right: 20px;
+      }
+      .message_span {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+     .topicline b{
+        color:#ff1493;
+     }
+      .postform th {
+        background: #1c1c1c;
+        border: 1px solid #363636;
+        text-align: left;
+        padding-left: 4px;
+        padding-right: 5px;
+      }
+      .posttext {
+        width: 400px;
+        height: 20px;
+        border: 1px solid #363636;
+        background: #ffffff;
+      }
+      .postbutton {
+        width: 100px;
+        border: 1px solid #363636;
+        background: #ffffff;
+      }
+      .postarea {
+        width: 400px;
+        height: 48px;
+        border: 1px solid #363636;
+        background: #ffffff;
+        padding: 0px;
+        margin: 0px;
+      }
+      .postfile {
+      }
+      .boards {
+        padding-left: 10px;
+      }
+      .boards a,
+      .pagelist a{
+        text-decoration: none;
+      }
+      .evilstuff {
+        position: absolute;
+        right: 0px;
+        top: 20px;
+        display: none;
+      }
+      .stillevil {
+        display: none;
+      }
+      .evilmod {
+        position: absolute;
+        right: 20px;
+        top: 0px;
+      }
+      .evilmod:checked ~ form .evilstuff {
+        display: block;
+      }
+      .evilmod:checked ~ form .stillevil {
+        display: inline;
+      }
+      .stillevil input {
+        margin: 0px;
+      }
+      .warning {
+        color: #FF0000;
+        display: none;
+      }
+      .purge_root:checked ~ .warning {
+        display: inline;
+      }
+      .sig_label {
+        color: #00FF00;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .sig_chk {
+        position: absolute;
+        opacity: 0;
+        z-index: -1;
+      }
+      .sig_key {
+        padding-left: 5px;
+        display: none;
+      }
+      .sig_chk:checked ~ .sig_key {
+        display: inline;
+      }
+      .overlay {
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        background: #000000;
+        opacity: 0.97;
+        z-index: 1;
+        visibility: hidden;
+        text-align: center;
+      }
+      .lblhelp {
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .chkhelp {
+        display: none;
+      }
+      .chkhelp:checked ~ form .overlay {
+        visibility: visible;
+      }
+      .overlay_inner {
+        position: absolute;
+        left: 25%;
+        top: 15%;
+        width: 50%;
+        background: #0A0A0A;
+        border: 1px solid #454545;
+        text-align: left;
+      }
+      .quote {
+        color: #00AA00;
+      }
+      .code {
+        background-color: #303030;
+        border: 1px solid #404040;
+        clear: right;
+        font-family: monospace;
+        font-size: 9pt;
+        overflow: auto;
+        white-space: pre;
+        width: 80%;
+      }
+      .datatable {
+        background: #141414;
+        border: 1px solid #3B3B3B;
+        border-collapse: collapse;
+      }
+      .datatable th {
+        background: #1C1C1C;
+      }
+      .datatable td, .datatable th {
+        border: 1px dotted #3B3B3B;
+        padding: 1px 4px;
+        vertical-align: top;
+      }
+      .mod {
+        font-family: monospace;
+        font-size: 9pt;
+        margin: 20px 10px 10px;
+      }
+      .mod table {
+        border-collapse: collapse;
+        font-size: 9pt; //damn you chromium
+      }
+      .dontwrap {
+        white-space: nowrap;
+      }
+      .right {
+        text-align: right;
+      }

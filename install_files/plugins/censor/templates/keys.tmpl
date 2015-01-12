@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>foobar</title>
+    <link type="text/css" href="/styles.css" rel="stylesheet">
+    <style type="text/css">
+      .keys_known tr:nth-child(2n+2) {
+          background: none repeat scroll 0 0 #151515;
+      }
+      .keys_all tr:nth-child(2n+2) {
+          background: none repeat scroll 0 0 #151515;
+      }
+      td, th {
+        padding: 0px;
+      }
+      .key {
+        text-align: right;
+      }
+      .date {
+        padding-right: 10px;
+      }
+      .action {
+        padding-left: 10px;
+        text-align: center;
+      }
+      .postid {
+        padding-left: 10px;
+      }
+      .reason {
+        text-align: right;
+        padding-left: 10px;
+      }
+      .actions {
+        padding-left: 10px;
+      }
+      .data_center {
+        text-align: center;
+        padding-left: 10px;
+      }
+      .box {
+        border: 1px dotted #AFAFAF;
+      }
+    </style>
+  </head>
+  <body class="mod">
+    %%navigation%%
+    <div class="box">
+      <b>known public keys</b>
+      <table border="0px" class="keys_known">
+        <tr>
+          <th>&nbsp;</th>
+          <th class="data_center">local_alias</th>
+  %%flag_names%%
+          <th>&nbsp;</th>
+        </tr>
+        %%mod_whitelist%%
+      </table>
+    </div>
+    <br />
+    <div class="box">
+      <b>key stats</b>
+      <table border="0px" class="keys_all">
+        <tr>
+          <th>&nbsp;</th>
+          <th class="data_center">local_alias</th>
+          <th class="data_center" colspan="2">accepted_by_trusted_keys</th>
+          <th>&nbsp;</th>
+        </tr>
+        %%mod_unknown%%
+      </table>
+    </div>
+  </body>
+</html>

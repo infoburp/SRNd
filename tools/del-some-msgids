@@ -1,0 +1,18 @@
+#!/usr/bin/python
+
+import sqlite3
+
+sqlite_conn = sqlite3.connect('dropper.db3')
+dropper = sqlite_conn.cursor()
+
+sqlite_hasher_conn = sqlite3.connect('hashes.db3')
+hashes = sqlite_hasher_conn.cursor()
+
+sqlite_overchan = sqlite3.connect('plugins/overchan/overchan.db3')
+overchan = sqlite_overchan.cursor()
+
+f = open('msgids', 'r')
+for line in f:
+    dropper.execute('DELETE FROM articles WHERE message_id=?', (line,))
+    hashes.execute('DELETE FROM article_hashes WHERE message_id=?', (line,))
+    overchan.execute('DELETE FROM articles WHERE article_uid=?', (line,))

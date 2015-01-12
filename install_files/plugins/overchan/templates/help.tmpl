@@ -1,0 +1,18 @@
+
+This frontend is part of a distributed and decentralized chan network called Overchan.
+The software driving this frontend is called SRNd (which stands for <b class="sig_label">s</b>ome <b class="sig_label">r</b>andom <b class="sig_label">N</b>NTP <b class="sig_label">d</b>aemon), the chan network uses the NNTP protocol to synchronize messages among different frontends. 
+
+<b>Tripcodes</b>
+
+Due to the fact of being a distributed and decentralized system, tripcodes like in usual centralized implementations do not work. Therefore Overchan provides an alternative to sign messages: NaCl/libsodium generated ed25519 signatures. To use this feature append # and your secret key (32 byte random value, encoded in hex which makes it 64 characters containing 0-9 and a-f) after your name when posting messages. The signature will verify all your supplied input like your message, name, attachment, references, board and date. Messages which can be validated will have 6 characters from the resulting public key (first 3 and last 3) in green appended. A click on this "short key" provides the large unique hex encoded public key which can be used by everybody to verify the author of a message on all frontends. You can create a keypair <a href="/moderate?getkey" target="_blank">here</a>. Keep in mind, the administrator of the frontend you use to post a signed message is theoretically able to read your secret key, administrators of other frontends are not.
+Although it is possible to use short trips like nick#somerandomtrip, it is recommend to use the full 64 character secret key. If you use another frontend to post a signed message using your full key the message will show up with the same public key. If you instead use a short trip, every frontend you post to generates a different public key.
+
+<b>Moderation</b>
+
+Moderation works with control messages in a hidden group. Only correctly signed control messages of whitelisted administrators/moderators (or more specifically their public keys) are processed. Every frontend has its own whitelist / access control list of public keys which may be further restricted to single commands. Currently supported commands are "delete" and "delete-attachment" suggestions. Future commands may include a "news-add" and "news-delete" suggestion for the overview page.
+As each frontend has its own moderation policy and thus may have different keys for different commands whitelisted, posts may be deleted by one frontend while other frontends still show them. 
+
+
+To support further developement of SRNd and to help rolling out new frontends please consider a small donation.
+Bitcoin: 13qLsUycNa5vizqtc5DfEfR7ejae3MTZdC
+Dogecoin: DRn931s4zuFwKdSDnmaqdLVxH3zUUSPXfB

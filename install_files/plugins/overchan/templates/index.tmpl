@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>${title}</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <style type="text/css">
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        background-color: #1d1f21;
+      }
+      #menu {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 10%;
+        border: 0;
+        width: calc(10% - 15px);
+      }
+      #main {
+        position: absolute;
+        left: 10%;
+        top: 0;
+        height: 100%;
+        width: 90%;
+        border: 0;
+        width: calc(90% + 15px);
+        left: calc(10% - 15px);
+      }
+      @media(max-width:75em) {
+        #main {left: 0;width: 100%;}
+        #menu {width: 0;}
+      }
+    </style>
+  </head>
+  <body>
+    <iframe src="menu.html" name="menu" id="menu" scrolling="no">
+      <a href="menu.html">${title}</a>
+    </iframe>
+    <iframe src="overview.html" name="main" id="main">
+      <a href="overview.html">${title} Navigation</a>
+    </iframe>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+# empty lines or lines starting with # are ignored
+# () == list
+# [] == dict
+
+uid_host=web.forum.i.did.not.read.the.config
+#enforce_target=%%sha1_message_uid_10%%.html
+#enforce_board=some.board.name
+allow_signatures=True
+#allow_sage=True
+
+(required_fields)
+name
+subject
+board
+reply
+comment
+target
+
+[defaults]
+subject=No subject
+name=Anonymous Coward
+email=nobody@no.where
+
+(allowed_files)
+image/*
+application/pdf
+application/ps
+application/postscript
+
+(allowed_boards)

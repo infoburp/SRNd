@@ -1,0 +1,217 @@
+#!/usr/bin/python
+
+import codecs
+import string
+import random
+import base64
+import mimetypes
+import time
+import os
+import os.path
+import sys
+import re
+from hashlib import sha1
+from datetime import datetime
+from functools import partial
+import psycopg2
+import psycopg2.extensions
+psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
+psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
+
+db_host = 'localhost'
+db = 'kusaba'
+db_user = 'kusaba'
+db_pass = ''
+
+kusaba_path = '/var/www/kusabax'
+kusaba_path = '/var/www/vhosts/hiddenchan.i2p'
+
+uid_host = 'import.hiddenchan'
+template_directory = 'templates'
+
+g_map = {
+        "b": "ru.random",
+        "b2": "ru.random",
+        "d": "hiddenchan",
+        "int": "random",
+        "pol": "ru.politics",
+        "t": "test",
+        "txt": "ru.random",
+        "i2p": "ru.i2p",
+        "c": "technology",
+        "s": "technology",
+        "i": "invasion",
+        "cp": "cp",
+        "g": "porn",
+        "h": "porn",
+        "a": "anime",
+        "med": "life",
+        "cri": "crime",
+        "e": "datalove",
+        "mu": "music",
+        "sci": "science",
+        "vg": "games",
+        "bo": "datalove",
+        "ew": "life",
+        "pa": "ru.random",
+        "tv": "ru.random",
+        "rf": "life",
+        "bb": "ru.drugs"
+        }
+
+def striphtml(data):
+    # nice newlines
+    data = re.sub('\r', '\n', data)
+    # perform demarkup
+    data = re.sub('<b>(.+?)</b>', r' **\1** ', data, flags=re.DOTALL)
+    data = re.sub('<i>(.+?)</i>', r' *\1* ', data, flags=re.DOTALL)
+    data = re.sub('<strike>(.+?)</strike>', r' --\1-- ', data, flags=re.DOTALL)
+    # disable underline cos it's buggy in kusaba
+    #data = re.sub(r'<span style=\\"border-bottom: 1px solid\\">(.+?)</span>', r'_\1_', data, flags=re.DOTALL)
+    data = re.sub(r'<span class=\\"spoiler.+?>(.+?)</span>', r' %%\1%% ', data, flags=re.DOTALL)
+    data = re.sub(r'<div class=\\"code_part\\".+?>(.+?)</div>', r' [code]\1[/code] ', data, flags=re.DOTALL)
+    # strip other tags
+    data = re.sub(r'<.*?>', '', data)
+    # quotes
+    data = re.sub('&gt;', '>', data)
+    # remove excessive newlines
+    data = re.sub('\n\n', '\n', data)
+    return data
+
+def search_file(board, file_name, file_type):
+    if file_name == '' or file_type == '':
+        return ''
+    p1 = '{0}/{1}/src/{2}.{3}'.format(kusaba_path, board['name'], file_name.encode('utf-8'), file_type)
+    p2 = '{0}/{1}/arch/src/{2}.{3}'.format(kusaba_path, board['name'], file_name.encode('utf-8'), file_type)
+    if os.path.exists(p1):
+        return p1
+    elif os.path.exists(p2):
+        return p2
+    else:
+        return ''
+
+def make_msgid(post_id, board, timestamp):
+    msgid = '<{0}{1}{2}@{3}>'.format(post_id, board['name'], timestamp, uid_host)
+    return msgid
+
+def generate_redirect(post_id, board, root_msgid):
+
+    f = codecs.open(os.path.join(template_directory, 'redirect'), 'r', 'UTF-8')
+    template_redirect = f.read()
+    f.close()
+
+    link = os.path.join('redirects', board['name'], 'res', str(post_id) + '.html')
+    f = codecs.open(link, 'w', 'UTF-8')
+    f.write(template_redirect.format(sha1(root_msgid).hexdigest()[:10]))
+
+def linkit(board, rematch):
+    # avoid modifying original dict
+    tmp_board = board.copy()
+    if rematch.lastindex == 2:
+        tmp_board['name'] = rematch.group(1)
+        post_id = rematch.group(2)
+        cur.execute("SELECT id FROM boards WHERE name=%s;", (tmp_board['name'],))
+        r = cur.fetchone()
+        if r == None:
+            return '>>/{0}/{1}'.format(tmp_board['name'], post_id)
+        tmp_board['bid'] = r[0]
+    elif rematch.lastindex == 1:
+        post_id = rematch.group(1)
+    # select timestamp
+    cur.execute("SELECT timestamp FROM posts WHERE boardid=%s AND id=%s;", (tmp_board['bid'], post_id))
+    r = cur.fetchone()
+    if r == None:
+        return '>>/{0}/{1}'.format(tmp_board['name'], post_id) 
+    timestamp = r[0]
+    msgid = make_msgid(post_id, tmp_board, timestamp)
+    return '>>' + sha1(msgid).hexdigest()[:10]
+
+def make_article(board, timestamp, group, message, msgid, ip, name='Anonymous', email='nobody@no.where', subject='None', parent_message_id='', file_name_full=''):
+
+    sender = '{0} <{1}>'.format(name, email)
+    date = datetime.fromtimestamp(timestamp).strftime('%a, %d %b %Y %H:%M:%S +0000')
+    boundary = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(40))
+    try:
+        file_name = file_name_full.split('/')[-1]
+    except:
+        print file_name
+        sys.exit(1)
+
+    if subject == 'sage':
+        sage = "\nX-Sage: True"
+    else:
+        sage = ''
+
+    # fix >>links to new message-id hashes
+    message = re.sub('>>([0-9]+)', partial(linkit, board), message)
+    message = re.sub('>>/([a-z2]+?)/([0-9]+)', partial(linkit, board), message)
+
+    f = codecs.open(os.path.join(template_directory, 'message_nopic.template'), 'r', 'UTF-8')
+    template_message_nopic = f.read()
+    f.close()
+    f = codecs.open(os.path.join(template_directory, 'message_pic.template'), 'r', 'UTF-8')
+    template_message_pic = f.read()
+    f.close()
+
+    link = os.path.join('out', msgid)
+    f = codecs.open(link, 'w', 'UTF-8')
+    if file_name == '':
+        f.write(template_message_nopic.format(sender, date, group, subject, msgid, parent_message_id, uid_host, message, sage, ip))
+    else:
+        content_type = mimetypes.guess_type(file_name, strict=False)[0]
+        f.write(template_message_pic.format(sender, date, group, subject, msgid, parent_message_id, uid_host, boundary, message, content_type, file_name.decode('utf-8'), sage, ip))
+        fl = open(file_name_full, 'r')
+        base64.encode(fl, f)
+        f.write('--{0}--\n'.format(boundary))
+    f.close()
+
+# create dirs
+try:
+    os.mkdir('out')
+except OSError:
+    pass
+
+# connect to database
+try:
+    conn = psycopg2.connect(database=db, user=db_user, host=db_host, password=db_pass)
+except:
+    print 'Unable to connect to the database'
+    sys.exit(1)
+
+cur = conn.cursor()
+cur.execute("""SELECT id, name, "desc" FROM boards;""")
+rows = cur.fetchall()
+# iterate all boards
+for row in rows:
+    board = dict()
+    board['bid'], board['name'], board['desc'] = row
+    # nntp group
+    group = 'overchan.{0}'.format(g_map[board['name']])
+
+    # get all root thread messages
+    cur.execute("SELECT id, parentid, subject, message, file, file_type, timestamp, ip FROM posts WHERE boardid=%s AND parentid='0';", (board['bid'],))
+    rows = cur.fetchall()
+    for row in rows:
+        post_id, parentid, subject, message, file_name, file_type, timestamp, ip = row
+        # message content
+        message = striphtml(message)
+        file_name_full = search_file(board, file_name, file_type)
+        # make message-id
+        root_msgid = make_msgid(post_id, board, timestamp)
+        try:
+            os.makedirs(os.path.join('redirects', board['name'], 'res'))
+        except OSError:
+            pass
+        generate_redirect(post_id, board, root_msgid)
+        make_article(board, timestamp, group, message, root_msgid, ip, name='Anonymous', subject=subject, parent_message_id='', file_name_full=file_name_full)
+
+        # get all child messages
+        cur.execute("SELECT id, subject, message, file, file_type, timestamp, ip FROM posts WHERE boardid=%s AND parentid=%s;", (board['bid'], post_id))
+        rows = cur.fetchall()
+        for row in rows:
+            post_id, subject, message, file_name, file_type, timestamp, ip = row
+            child_msgid = make_msgid(post_id, board, timestamp)
+            message = striphtml(message)
+            file_name_full = search_file(board, file_name, file_type)
+            make_article(board, timestamp, group, message, child_msgid, ip, name='Anonymous', subject=subject, parent_message_id=root_msgid, file_name_full=file_name_full)
+    print "processed: %s" % board['name']

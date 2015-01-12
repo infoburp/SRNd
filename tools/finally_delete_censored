@@ -1,0 +1,24 @@
+#!/bin/sh
+if [ $USER != "root" ]; then
+  if [ $USER != "news" ]; then
+    echo "script must be run as 'root' or 'news'";
+    exit 1;
+  fi
+fi
+if [ $USER = "root" ]; then
+  exec su news -c "$0";
+fi
+root="data/articles/censored"
+if ! [ -d "$root" ]; then
+  echo "can't find $root, script must be run in SRNd main directory";
+  exit 2;
+fi
+echo "running as $USER";
+echo -n "really sure you want to remove all censored articles? this action can not be undone [yes/no] ";
+read answer;
+[ x"$answer" != x"yes" ] && exit 0;
+cd "$root"
+for item in $(ls); do
+  printf "" > $item;
+done
+echo "all censored articles deleted."

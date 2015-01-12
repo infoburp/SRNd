@@ -1,0 +1,100 @@
+body {
+        margin: 0px;
+        background: #444444;
+        font-family: arial,helvetica,sans-serif;
+        font-size: 10pt;
+      }
+      table {
+        font-size: 10pt;
+      }
+      a {
+        color: #898989;
+      }
+      hr {
+        color: #121212;
+      }
+      .filedescription {
+        font-style: italic;
+      }
+      .messageroot {
+        margin-bottom: 1px;
+        border: 2px solid #3a3a3a;
+        background: #555555;
+        border-radius: 7px;
+        padding: 5px;
+      }
+      .message {
+        margin-left: 25px;
+        margin-bottom: 1px;
+        border: 2px solid #3a3a3a;
+        background: #555555;
+        border-radius: 7px;
+        padding: 5px;
+      }
+      .image_link {
+        float: left;
+        padding-right: 5px;
+      }
+      .image_root {
+        border-radius: 7px;
+        border: 1px solid #333333;
+        width: 180px;
+      }
+      .image {
+        border-radius: 7px;
+        border: 1px solid #333333;
+        width: 150px;
+      }
+      .thread {
+        padding-top: 5px;
+        padding-left: 10px;
+        padding-right: 20px;
+      }
+      .message_span {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+      .postform th {
+        background: #666666;
+        border: 1px solid #333333;
+        text-align: left;
+        padding-left: 4px;
+        padding-right: 5px;
+      }
+      .posttext {
+        width: 400px;
+        height: 20px;
+        border: 1px solid #333333;
+        background: #dedede;
+      }
+      .postbutton {
+        width: 100px;
+        border: 1px solid #aaaaaa;
+        background: #dedede;
+      }
+      .postarea {
+        width: 400px;
+        height: 48px;
+        border: 1px solid #333333;
+        background: #dedede;
+        padding: 0px;
+        margin: 0px;
+      }
+      .postfile {
+        //border: 1px solid #aaaaaa;
+        //background: #dedede;
+      }
+      .stillevil {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin-left: 10px;
+        display: none;
+      }
+      .evilmod {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+      }
+      .evilmod:checked ~ form .stillevil {
+        display: inline;
+      }

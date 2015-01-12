@@ -1,0 +1,186 @@
+#!/usr/bin/env python
+
+import re
+import os
+import magic
+import random
+import string
+import base64
+import nacl.signing
+import MySQLdb as mdb
+from binascii import hexlify
+from datetime import datetime
+from hashlib import sha1, sha256, sha512
+
+class tinyib_importer(object):
+
+  def __init__(self):
+    self.replacers = (
+      (re.compile(r'>>(\d+)'), self.re_postnr_inboard),
+      (re.compile(r'>>>/([^/]+)/(\d+)'), self.re_postnr_crossboard),
+      (re.compile(r'<a href=>>>/([^/]+)/(\d+)'), self.re_postnr_crossboard),
+    )
+    try:
+      self.tinyib_conn = mdb.connect('x.x.x.x', 'user', 'password', 'database');
+      self.tinyib_conn.set_character_set('utf8')
+      self.tinyib = self.tinyib_conn.cursor()
+    except mdb.Error, e:
+      print "Error %d: %s" % (e.args[0],e.args[1])
+      if self.tinyib_conn:
+        self.tinyib_conn.close()
+    f = open('templates/message_nopic.template', 'r')
+    self.template_message_nopic = unicode(f.read())
+    f.close()
+    f = open('templates/message_pic.template', 'r')
+    self.template_message_pic = unicode(f.read())
+    f.close()
+    f = open('templates/message_signed.template', 'r')
+    self.template_message_signed = unicode(f.read())
+    f.close()
+
+    self.uid_host = 'import.oniichan'
+    self.ib_data_dir = 'ib'
+    self.mime = magic.open(magic.MAGIC_MIME_TYPE)
+    self.mime.load()
+    if os.path.exists('seed'):
+      f = open('seed', 'r') 
+      self.seed = f.read(32)
+    else:
+      f = open('/dev/random', 'r')
+      self.seed = f.read(32)
+      f.close()
+      f = open('seed', 'w')
+      f.write(self.seed)
+    f.close()
+
+  def get_new_message_id(self, postnr, board=None):
+    if board == None: board = self.current_board
+    return "<%s%i@%s>" % (board, int(postnr), self.uid_host)
+
+  def re_postnr_inboard(self, rematch):
+    msg_id = self.get_new_message_id(rematch.group(1))
+    return ">>%s" % sha1(msg_id).hexdigest()[:10]
+
+  def re_postnr_crossboard(self, rematch):
+    msg_id = self.get_new_message_id(rematch.group(2), board=rematch.group(1))
+    return ">>%s" % sha1(msg_id).hexdigest()[:10]
+
+  def start(self):
+    self.current_board = 'a'
+    self.current_newsgroup = 'overchan.anime'
+    print "starting import for board %s.." % self.current_board
+    threads = dict()
+    try:
+      self.tinyib.execute('SELECT id, thread, name, email, subject, time, sage, body_nomarkup, file, filename, trip  FROM posts_%s ORDER BY time ASC' % self.current_board)
+      for row in self.tinyib.fetchall():
+        if row[1] != None:
+          parent = self.get_new_message_id(row[1])
+        else: parent = ''
+        if row[6] == 1 or (row[3] and row[3].lower() == 'sage'):
+          sage = '\nX-Sage: True'
+        else: sage = ''
+        if row[4]:  subject = row[4].decode('UTF-8')
+        else:       subject = 'None'
+        if row[8]:  file_source = row[8].decode('UTF-8')
+        else:       file_source = row[8]
+        if row[9]:  file_name = row[9].decode('UTF-8')
+        else:       file_name = row[9]
+        if row[2]:  sender = u"%s <none_of@your.business>" % row[2].decode('UTF-8')
+        else:       sender = "Anonymous <none_of@your.business>"
+
+        if row[10] and len(row[10]) > 0:
+          out = list()
+          counter = 0
+          for char in row[10]:
+            out.append(chr(ord(self.seed[counter]) ^ ord(char)))
+            counter += 1
+          for x in range(counter, 32):
+            out.append(self.seed[x])
+          keypair = nacl.signing.SigningKey(sha256("".join(out)).digest())
+          del counter
+          del out
+        else:
+          keypair = None
+
+        body = row[7].replace('\r', '').decode('UTF-8')
+        for replacer in self.replacers:
+          body = replacer[0].sub(replacer[1], body)
+        data = dict()
+        data['sender']      = sender
+        data['message_id']  = self.get_new_message_id(row[0])
+        data['date']        = datetime.utcfromtimestamp(row[5]).strftime('%a, %d %b %Y %H:%M:%S +0000')
+        data['newsgroup']   = self.current_newsgroup
+        data['parent']      = parent
+        data['subject']     = subject
+        data['sage']        = sage
+        data['body']        = body
+        data['file_source'] = file_source
+        data['file_name']   = file_name
+        data['keypair']     = keypair
+        self.write_article(**data)
+      print "got %i threads in total" % len(threads)
+      self.tinyib_conn.close()
+      return True
+    except Exception as e:
+      self.tinyib_conn.close()
+      print "Error: %s" % e
+      raise
+      return False
+    
+  def write_article(self, message_id='', parent='', sage='', keypair=None, file_source='', file_name='', sender='', date='', newsgroup='', subject='', body=''):
+    print "processing %s.." % message_id
+    boundary = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(40))
+    if keypair:
+      link = os.path.join('incoming', 'tmp', message_id + '_')
+    else:
+      link = os.path.join('incoming', 'tmp', message_id)
+    f = open(link, 'w')
+    if not file_source or (file_source == 'deleted'):
+      tmp = self.template_message_nopic.format(sender, date, newsgroup, subject, message_id, parent, self.uid_host, body, sage)
+      f.write(tmp.encode('UTF-8'))
+    else:
+      file_source = os.path.join(self.ib_data_dir, self.current_board, 'src', file_source)
+      #print "checking MIME for %s.." % file_source
+      content_type = self.mime.file(file_source)
+      #print "found content_type '%s'" % content_type
+      tmp = self.template_message_pic.format(sender, date, newsgroup, subject, message_id, parent, self.uid_host, boundary, body, content_type, file_name, sage)
+      f.write(tmp.encode('UTF-8'))
+      i = open(file_source, 'r')
+      base64.encode(i, f)
+      i.close()
+      f.write('--{0}--\n'.format(boundary))
+    f.close()
+    if keypair:
+      hasher = sha512()
+      f = open(link, 'r')
+      oldline = None
+      for line in f:
+        if oldline:
+          hasher.update(oldline)
+        oldline = line.replace("\n", "\r\n")
+      f.close()
+      oldline = oldline.replace("\r\n", "")
+      hasher.update(oldline)
+      signature = hexlify(keypair.sign(hasher.digest()).signature)
+      pubkey = hexlify(keypair.verify_key.encode())
+      signed = open(link[:-1], 'w')
+      tmp = self.template_message_signed.format(sender, date, newsgroup, subject, message_id, parent, self.uid_host, pubkey, signature, sage)
+      signed.write(tmp.encode('UTF-8'))
+      f = open(link, 'r')
+      f.seek(0)
+      for line in f:
+        signed.write(line)
+      f.close()
+      signed.close()
+      del hasher
+      del keypair
+      del pubkey
+      del signature
+      os.unlink(link)
+
+if __name__ == '__main__':
+  importer = tinyib_importer()
+  if importer.start():
+    print "import successful"
+  else:
+    print "something gone wrong"

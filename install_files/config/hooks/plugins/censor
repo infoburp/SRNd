@@ -1,0 +1,12 @@
+#start_param debug=2
+#start_param SRNd=self
+#start_param bind_ip=127.0.0.1
+#start_param bind_port=53753
+#start_param bind_use_ipv6=False
+#start_param template_directory=plugins/censor/templates
+#start_param reject_debug=False
+#start_param uid_host=web.censor.i.did.not.read.the.config
+#start_param add_admin=9ba37a305385d4f16dad182f35021b2076946e56ada87b88734e860a923ec890
+#start_param sync_on_startup=True
+
+ctl

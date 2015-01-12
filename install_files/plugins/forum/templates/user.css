@@ -1,0 +1,112 @@
+body {
+  background-color: lightblue;
+  color: black;
+}
+.datatable,
+.datatable th {
+  background-color: #F5F5F5;
+}
+.datatable {
+  border: 1px solid #777777;
+}
+.datatable th {
+  white-space: nowrap;
+  height: 1px;
+}
+.datatable th,
+.datatable td {
+  /*max-width: 250px;*/
+  overflow: hidden;
+}
+a {
+  color: #0000EE;
+}
+.sitetitle,
+.sitetitle h2 a {
+  color: black;
+}
+.user_data {
+  width: 150px;
+  text-align: center;
+}
+.perm {
+  font-weight: normal;
+  text-decoration: none;
+}
+#posts th {
+  border-left: 1px solid #777777;
+}
+#posts tr td:last-child {
+  border-bottom: 1px solid #777777;
+  border-left: 1px solid #777777;
+}
+.avatar {
+ border: 1px dashed #E9E9E9;
+ height: 100px;
+ margin: auto;
+ width: 80px;
+}
+.postform {
+  display: none;
+  margin-bottom: 15px;
+}
+#reply {
+  display: block !important;
+}
+.postform table,
+.posttext,
+.postarea {
+  width: 100%;
+}
+.postarea {
+  height: 96px;
+}
+.postform th {
+  background-color: #F5F5F5;
+}
+.postbutton {
+  width: auto;
+}
+label {
+  color: #0000EE;
+  cursor: pointer;
+  font-weight: bold;
+}
+#chk_postform:checked ~ .postform {
+  display: block;
+}
+.chk_hidden {
+  display: none;
+}
+.signature {
+  font-weight: bold;
+  /* color: #00FF00; */
+  color: #006400;
+}
+body {
+  margin: auto;
+  max-width: 1200px;
+}
+
+.subject,
+.starter,
+.replies,
+.lastpost {
+  vertical-align: middle !important;
+  max-width: 200px;
+}
+.starter,
+.replies {
+  word-wrap: break-word;
+  text-align: right;
+}
+.lastpost {
+  white-space: nowrap;
+}
+.quote {
+  border: 1px solid #777777;
+  color: black;
+  margin: 5px 15px;
+  /*background-color: rgba(0,0,0,0.08);*/
+  background-color: rgba(64, 64, 64, 0.08);
+}

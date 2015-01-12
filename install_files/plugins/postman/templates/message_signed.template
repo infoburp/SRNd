@@ -1,0 +1,13 @@
+Content-Type: message/rfc822; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+From: {0}
+Date: {1}
+Newsgroups: {2}
+Subject: {3}
+Message-ID: {4}
+References: {5}
+Path: {6}{9}
+X-I2P-DestHash: {10}
+X-pubkey-ed25519: {7}
+X-signature-ed25519-sha512: {8}
+

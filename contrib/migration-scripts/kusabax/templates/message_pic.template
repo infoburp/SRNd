@@ -1,0 +1,23 @@
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="{7}"
+From: {0}
+Date: {1}
+Newsgroups: {2}
+Subject: {3}
+Message-ID: {4}
+References: {5}
+Path: {6}{11}
+X-I2P-DestHash: {12}
+
+This is a multi-part message in MIME format.
+--{7}
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+{8}
+
+--{7}
+Content-Type: {9}; name="{10}"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="{10}"
+
