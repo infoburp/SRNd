@@ -13,6 +13,10 @@
 #start_param template_directory=plugins/paste/templates
 #start_param output_directory=plugins/paste/out
 #start_param database_directory=plugins/paste
+#start_param css_file=master.css
 #start_param debug=2
+#start_param title=paste.i.did.not.read.the.config
+#start_param generate_all=False
+#start_param sync_on_startup=True
 
 ano.paste

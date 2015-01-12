@@ -1,106 +1,28 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+   
 <html>
   <head>
-    <title>overchan.sfor.ano</title>
-    <style type="text/css">
-      body {
-        margin: 0px;
-        background: #444444;
-        font-family: arial,helvetica,sans-serif;
-        font-size: 10pt;
-      }
-      table {
-        font-size: 10pt;
-      }
-      a {
-        color: #898989;
-      }
-      hr {
-        color: #121212;
-      }
-      .filedescription {
-        padding-left: 3px;
-      }
-      .messageroot {
-        margin-bottom: 1px;
-        border: 2px solid #3a3a3a;
-        background: #555555;
-        border-radius: 7px;
-        padding: 5px;
-      }
-      .message {
-        margin-left: 25px;
-        margin-bottom: 1px;
-        border: 2px solid #3a3a3a;
-        background: #555555;
-        border-radius: 7px;
-        padding: 5px;
-      }
-      .image_link {
-        float: left;
-        padding-right: 5px;
-      }
-      .image_root {
-        border-radius: 7px;
-        border: 1px solid #333333;
-        width: 180px;
-      }
-      .image {
-        border-radius: 7px;
-        border: 1px solid #333333;
-        width: 150px;
-      }
-      .thread {
-        padding-top: 5px;
-        padding-left: 10px;
-        padding-right: 20px;
-      }
-      .message_span {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-      }
-      .postform th {
-        background: #666666;
-        border: 1px solid #333333;
-        text-align: left;
-        padding-left: 4px;
-        padding-right: 5px;
-      }
-      .posttext {
-        width: 400px;
-        height: 20px;
-        border: 1px solid #333333;
-        background: #dedede;
-      }
-      .postbutton {
-        width: 100px;
-        border: 1px solid #aaaaaa;
-        background: #dedede;
-      }
-      .postarea {
-        width: 400px;
-        height: 48px;
-        border: 1px solid #333333;
-        background: #dedede;
-        padding: 0px;
-        margin: 0px;
-      }
-      .postfile {
-        //border: 1px solid #aaaaaa;
-        //background: #dedede;
-      }
-    </style>
+    <title>${title} :: ${board} :: ${subject}</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="overchan.js"></script>
+    <link rel="stylesheet" href="styles.css" type="text/css">
+    <link rel="stylesheet" href="user.css" type="text/css">
   </head>
   <body>
-    <div class="boards">[%%boardlist%%]</div>
-    <hr /><br />
+    <div class="boards">[${boardlist}]</div>
+    <hr />
+    <div class="sitetitle">
+      <h2><a href="overview.html">${title}</a></h2>
+      <b>decentralized and distributed</b>
+    </div>
+    <center><b>${board} :: ${subject}</b></center>
     <div class="postform" align="center">
       <form method="POST" action="/incoming" enctype="multipart/form-data">
         <input type="hidden" name="frontend" value="overchan" />
-        <input type="hidden" name="board" value="%%board%%" />
-        <input type="hidden" name="reply" value="%%thread_id%%" />
-        <input type="hidden" name="target" value="%%target%%" />
+        <input type="hidden" name="board" value="${full_board}" />
+        <input type="hidden" name="reply" value="${thread_id}" />
+        <input type="hidden" name="target" value="${target}" />
         <table cellspacing="1" cellpadding="0">
           <tr>
             <th>Name</th>
@@ -128,7 +50,29 @@
         </table>
       </form>
     </div>
+    <input type="checkbox" id="chkhelp" class="chkhelp" title="evil mod">
+    <label for="chkhelp" class="lblhelp">?</label>
+    <input type="checkbox" class="evilmod" title="evil mod" />
+    <form method="POST" action="/moderate?evil" enctype="multipart/form-data">
+      <div class="overlay">
+        <br />
+        <span class="overlaytext">What the fuck is this?</span>
+        <label for="chkhelp" class="lblhelp">x</label>
+        <br /><br /><br />
+        <div class="overlay_inner">
+          <span class="message_span">${help}</span>
+        </div>
+      </div>
+      <div class="evilstuff">&nbsp;<!--[<a href="/moderate?getkey" target="_blank">?</a>]-->
+        <label>secret</label>
+        <input type="hidden" name="target" value="${target}" />
+        <input type="text" title="secret" name="secret" class="posttext" />
+        <input type="submit" value="be evil" class="postbutton" />
+      </div>
+${thread_single}
+    <hr style="clear: both;">
+    </form>
+    <div class="boards">[${boardlist}]</div>
     <hr />
-%%thread_single%%
   </body>
 </html>

@@ -1,9 +1,9 @@
 SRNd - Some Random NNTP daemon
 
-SRNd is an NNTP server implemented in Python, providing a plugin interface and three different kinds of hooks (outfeeds, filesystem and plugin).
+SRNd is a NNTP daemon implemented in Python, providing a plugin interface and three different kinds of hooks (outfeeds, filesystem and plugin).
 It chroots itselfs and then drops privileges.
 
-SRNdIt comes with some plugins:
+SRNd comes with some plugins:
   - overchan (creates an imageboard styled forum based on NNTP articles in specific groups using static HTML documents, creates thumbnails for posted images)
   - paste (creates a pastebin based on NNTP articles in specifc groups using static HTML documents, uses pygments for detection of programming languages and syntax highlighting)
   - postman (listens on a configured port for POST requests to add new articles to NNTP, based on configured frontends)
@@ -11,5 +11,9 @@ SRNdIt comes with some plugins:
 Usually these plugins run behind an nginx reverse proxy. For details see docs/plugin_overchan.txt or docs/plugin_paste.
 
 Start SRNd with ./main.pyx
-
 For questions feel free to join #srnd or #anonet @ irc2p or one of these irc servers: http://anonet2.biz/#urc (most of them are only available via Tor hidden service).
+
+If you value SRNd or want to support further developement please consider a small donation:
+  Bitcoin  13qLsUycNa5vizqtc5DfEfR7ejae3MTZdC
+  Dogecoin DRn931s4zuFwKdSDnmaqdLVxH3zUUSPXfB
+All donations will be used for operating and creating new darknet related services and gateways.

@@ -40,6 +40,7 @@ padding-left: 4px;
   background: #F5F5F5;
   width: 80%;
   padding: 0px;
+  resize:none;
 }
 .pasteit {
   border: 1px solid #ADADAD;
@@ -59,7 +60,7 @@ span.lineno { background-color: #f0f0f0; padding: 0 5px 0 5px; }
 pre { line-height: 125%; }
 body .hll { background-color: #ffffcc }
 //body  { background: #ADD8E6; font-family: arial,helvetica,sans-serif; font-size: 10pt;}
-body  { background: #EDEDED; font-family: arial,helvetica,sans-serif; font-size: 10pt;}
+body  { background: #EDEDED; font-family: arial,sans-serif,helvetica; font-size: 10pt;}
 body .c { color: #408080; font-style: italic } /* Comment */
 body .err { border: 1px solid #FF0000 } /* Error */
 body .k { color: #008000; font-weight: bold } /* Keyword */

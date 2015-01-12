@@ -1,5 +1,8 @@
 Paste allows to create an (usually) decentralized pastebin based on NNTP articles.
 
+Requires Python pygments library. Debian based distributions may install it via apt-get install python-pygment.
+
+
 This plugin parses NNTP articles and creates static HTML documents.
 Which NNTP articles are parsed depends on the hook configuration in data/config/hooks/plugins/paste, usually all articles belonging to the group ano.paste (see hooks.txt for details).
 

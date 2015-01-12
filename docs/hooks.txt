@@ -11,7 +11,7 @@ The name of file defines
   - for plugin hooks: the name of the plugin to be loaded
   - for outfeed hooks: the IP and port SRNd tries to connect to
 
-New filesystem and outfeed hooks can be added with sending a SIGHUB signal to SRNd (kill -1 $pidofSRNd).
+New filesystem and outfeed hooks can be added with sending a SIGHUP signal to SRNd (kill -1 $pidofSRNd).
 This will also reload all hook rules for all currently running hooks (including plugin hooks).
 For adding new plugin hooks SRNd needs to be restarted.
 
